@@ -16,10 +16,17 @@ function loadCSV() {
       escape: '"',
       strict: false
     }))
-    .on("data", row => data.push(row))
+    .on("data", row => {
+      // On ne garde que les lignes qui ont une légende non vide
+if (row["Légende"] && row["Légende"].trim() !== "" && row["Légende"].trim() !==  "---") {
+  data.push(row);
+}
+    })
     .on("end", () => {
-      console.log("CSV chargé :", data.length, "lignes");
-      console.log("Colonnes détectées :", Object.keys(data[0]));
+      console.log("CSV chargé :", data.length, "lignes avec légende");
+      if (data.length > 0) {
+        console.log("Colonnes détectées :", Object.keys(data[0]));
+      }
     })
     .on("error", err => console.error("Erreur CSV :", err));
 }
@@ -34,7 +41,6 @@ app.get("/all", (req, res) => {
 // GET by Immatriculation
 app.get("/byImma/:id", (req, res) => {
   const id = req.params.id;
-
   const found = data.find(r => r.Immatriculation === id);
 
   if (!found) {
