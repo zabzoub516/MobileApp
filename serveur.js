@@ -18,8 +18,18 @@ function loadCSV() {
     }))
     .on("data", row => {
       // On ne garde que les lignes qui ont une légende non vide
-if (row["Légende"] && row["Légende"].trim() !== "" && row["Légende"].trim() !==  "---") {
-  data.push(row);
+if (row["Légende"] && row["Légende"].trim() !== "" && row["Légende"].trim() !==  "---"
+ && row["Commune"].trim() !== ""   ) {
+    const { 
+          ["Auteur doc. reproduit"]: _, 
+          ["Sujet"]: __, 
+          ["Lieu-dit"]: ___, 
+          ["Nom du fichier"]:____,
+          ["Catégorie"]:_____,
+          ["Mot-clé"]:_______,
+          ...filteredRow 
+        } = row;
+  data.push(filteredRow);
 }
     })
     .on("end", () => {
